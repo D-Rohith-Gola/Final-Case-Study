@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "eureka-server"
+        CONTAINER_NAME = "eureka-server-container"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Jar') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                script {
+                    sh '''
+                    docker rm -f $CONTAINER_NAME || true
+                    '''
+                }
+            }
+        }
+
+        stage('Run New Container') {
+            steps {
+                sh 'docker run -d -p 8761:8761 --name $CONTAINER_NAME $IMAGE_NAME'
+            }
+        }
+    }
+}
