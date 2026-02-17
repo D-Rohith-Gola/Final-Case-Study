@@ -2,7 +2,11 @@ package com.npci.transaction.controller;
 
 import org.springframework.web.bind.annotation.*;
 import com.npci.transaction.service.ITransactionService;
+
+import jakarta.validation.Valid;
+
 import com.npci.transaction.repository.UserRepository;
+import com.npci.transaction.dto.TransferRequest;
 import com.npci.transaction.entity.User;
 
 @RestController
@@ -23,9 +27,12 @@ public class TransactionController {
     }
 
     @PostMapping("/transfer")
-    public String transfer(@RequestParam String sender,
-                           @RequestParam String receiver,
-                           @RequestParam Double amount) {
-        return service.transfer(sender, receiver, amount);
+    public String transfer(@Valid @RequestBody TransferRequest request) {
+
+        return service.transfer(
+                request.getSender(),
+                request.getReceiver(),
+                request.getAmount()
+        );
     }
 }

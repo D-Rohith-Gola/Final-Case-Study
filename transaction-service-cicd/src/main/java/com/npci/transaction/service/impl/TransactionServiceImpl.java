@@ -5,6 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.npci.transaction.service.ITransactionService;
 import com.npci.transaction.repository.*;
 import com.npci.transaction.entity.*;
+import com.npci.transaction.exception.InsufficientBalanceException;
+import com.npci.transaction.exception.UserNotFoundException;
+
 import org.springframework.kafka.core.KafkaTemplate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -31,12 +34,16 @@ public class TransactionServiceImpl implements ITransactionService {
         User sender = userRepo.findByName(senderName);
         User receiver = userRepo.findByName(receiverName);
 
-        if(sender == null || receiver == null) {
-            throw new RuntimeException("User not found");
+        if (sender == null) {
+            throw new UserNotFoundException("Sender not found");
         }
 
-        if(sender.getBalance() < amount) {
-            throw new RuntimeException("Insufficient Balance");
+        if (receiver == null) {
+            throw new UserNotFoundException("Receiver not found");
+        }
+
+        if (sender.getBalance() < amount) {
+            throw new InsufficientBalanceException("Insufficient balance");
         }
 
         sender.setBalance(sender.getBalance() - amount);
