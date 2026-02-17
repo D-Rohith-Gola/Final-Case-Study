@@ -1,5 +1,7 @@
 package com.npci.transaction.service;
 
+import com.npci.transaction.dto.TransactionResponse;
+
 public interface ITransactionService {
-    String transfer(String senderName, String receiverName, Double amount);
+	TransactionResponse transfer(String senderName, String receiverName, Double amount);
 }

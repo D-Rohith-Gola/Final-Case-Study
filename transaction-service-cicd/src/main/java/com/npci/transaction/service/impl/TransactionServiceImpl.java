@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.npci.transaction.service.ITransactionService;
 import com.npci.transaction.repository.*;
+import com.npci.transaction.dto.TransactionResponse;
 import com.npci.transaction.entity.*;
 import com.npci.transaction.exception.InsufficientBalanceException;
 import com.npci.transaction.exception.UserNotFoundException;
@@ -29,7 +30,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     @Transactional
-    public String transfer(String senderName, String receiverName, Double amount) {
+    public TransactionResponse transfer(String senderName, String receiverName, Double amount) {
 
         User sender = userRepo.findByName(senderName);
         User receiver = userRepo.findByName(receiverName);
@@ -46,23 +47,40 @@ public class TransactionServiceImpl implements ITransactionService {
             throw new InsufficientBalanceException("Insufficient balance");
         }
 
+        Double payerOldBalance = sender.getBalance();
+        Double receiverOldBalance = receiver.getBalance();
+
         sender.setBalance(sender.getBalance() - amount);
         receiver.setBalance(receiver.getBalance() + amount);
 
         userRepo.save(sender);
         userRepo.save(receiver);
 
+        String txnId = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+
         PaymentTransaction txn = new PaymentTransaction();
-        txn.setTxnId(UUID.randomUUID().toString());
+        txn.setTxnId(txnId);
         txn.setPayerName(senderName);
         txn.setPayeeName(receiverName);
         txn.setAmount(amount);
-        txn.setPaymentTime(LocalDateTime.now());
+        txn.setPaymentTime(now);
 
         txnRepo.save(txn);
 
-        kafkaTemplate.send("txn-init", txn.getTxnId());
+        kafkaTemplate.send("txn-init", txnId);
 
-        return "Transaction Successful";
+        return new TransactionResponse(
+                "Transaction Successful",
+                txnId,
+                amount,
+                senderName,
+                receiverName,
+                now,
+                payerOldBalance,
+                sender.getBalance(),
+                receiverOldBalance,
+                receiver.getBalance()
+        );
     }
 }

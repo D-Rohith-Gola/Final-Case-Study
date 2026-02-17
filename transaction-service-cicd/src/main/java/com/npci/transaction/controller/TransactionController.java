@@ -6,6 +6,7 @@ import com.npci.transaction.service.ITransactionService;
 import jakarta.validation.Valid;
 
 import com.npci.transaction.repository.UserRepository;
+import com.npci.transaction.dto.TransactionResponse;
 import com.npci.transaction.dto.TransferRequest;
 import com.npci.transaction.entity.User;
 
@@ -27,7 +28,7 @@ public class TransactionController {
     }
 
     @PostMapping("/transfer")
-    public String transfer(@Valid @RequestBody TransferRequest request) {
+    public TransactionResponse transfer(@Valid @RequestBody TransferRequest request) {
 
         return service.transfer(
                 request.getSender(),
