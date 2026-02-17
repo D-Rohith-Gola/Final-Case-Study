@@ -9,7 +9,9 @@ public class TransactionResponse {
     private String txnId;
     private Double amount;
     private String payerName;
+    private String payerBankName;
     private String payeeName;
+    private String payeeBankName;
     private LocalDateTime paymentTime;
 
     private Double payerOldBalance;
@@ -22,7 +24,9 @@ public class TransactionResponse {
                                String txnId,
                                Double amount,
                                String payerName,
+                               String payerBankName,
                                String payeeName,
+                               String payeeBankName,
                                LocalDateTime paymentTime,
                                Double payerOldBalance,
                                Double payerNewBalance,
@@ -33,7 +37,9 @@ public class TransactionResponse {
         this.txnId = txnId;
         this.amount = amount;
         this.payerName = payerName;
+        this.payerBankName = payeeBankName;
         this.payeeName = payeeName;
+        this.payeeBankName = payeeBankName;
         this.paymentTime = paymentTime;
         this.payerOldBalance = payerOldBalance;
         this.payerNewBalance = payerNewBalance;
@@ -45,7 +51,9 @@ public class TransactionResponse {
     public String getTxnId() { return txnId; }
     public Double getAmount() { return amount; }
     public String getPayerName() { return payerName; }
+    public String getPayerBankName() {return payerBankName; }
     public String getPayeeName() { return payeeName; }
+    public String getPayeeBankName() {return payeeBankName; }
     public LocalDateTime getPaymentTime() { return paymentTime; }
     public Double getPayerOldBalance() { return payerOldBalance; }
     public Double getPayerNewBalance() { return payerNewBalance; }
