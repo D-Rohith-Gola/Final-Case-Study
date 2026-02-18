@@ -33,7 +33,6 @@ pipeline {
             bat 'mvn clean package -DskipTests'
         }
     }
-}
 
 
         stage('Build Docker Image') {
@@ -44,7 +43,6 @@ pipeline {
             """
         }
     }
-}
 
 
         stage('Ensure Docker Network Exists') {
