@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven-3'
-    }
-
     environment {
         GIT_REPO        = 'https://github.com/D-Rohith-Gola/Final-Case-Study.git'
         GIT_BRANCH      = 'fraud-service-go'
