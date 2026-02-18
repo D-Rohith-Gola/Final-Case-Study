@@ -30,7 +30,6 @@ pipeline {
 
        stage('Build Application (Skip Tests)') {
     steps {
-        dir('api-gateway-cicd') {
             bat 'mvn clean package -DskipTests'
         }
     }
@@ -39,7 +38,6 @@ pipeline {
 
         stage('Build Docker Image') {
     steps {
-        dir('api-gateway-cicd') {
             bat """
             docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
             docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
