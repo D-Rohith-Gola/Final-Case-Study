@@ -11,16 +11,16 @@ import (
 )
 
 type FraudResult struct {
-	TxnID    string    `json:"txnId"`
-	Status   string    `json:"status"`
-	Checked  time.Time `json:"checkedAt"`
+	TxnID   string    `json:"txnId"`
+	Status  string    `json:"status"`
+	Checked time.Time `json:"checkedAt"`
 }
 
 func main() {
 
 	kafkaBroker := os.Getenv("KAFKA_BROKER")
 	if kafkaBroker == "" {
-		kafkaBroker = "localhost:9092"
+		kafkaBroker = "kafka:9092"
 	}
 
 	reader := kafka.NewReader(kafka.ReaderConfig{
